@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% block title %}{{ type }}{% endblock %}
 {% block content %}
-
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <form class="m-2" method="post" style="border: 2px solid #ccc; padding: 20px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        <h1 style="text-align: center;">{{ type }} Page</h1>
-        {% csrf_token %}
-        {{ form | crispy }}
-
-        <button type="submit" class="btn btn-warning mt-3">Submit</button>
-      </form>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h3 text-center mb-3">{{ type }}</h1>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-warning mt-2">Submit</button>
+          {% if type == 'Login' %}<p class="mt-3 mb-0 small">No account yet? <a href="{% url 'register' %}">Register</a></p>{% else %}<p class="mt-3 mb-0 small">Already registered? <a href="{% url 'user_login' %}">Log in</a></p>{% endif %}
+        </form>
+      </div>
     </div>
   </div>
 </div>
-
 {% endblock %}
