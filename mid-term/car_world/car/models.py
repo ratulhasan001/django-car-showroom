@@ -8,9 +8,13 @@ class Car(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     price = models.IntegerField()
     quantity = models.IntegerField()
-    image = models.ImageField(upload_to='car/media/images/')
+    image = models.ImageField(upload_to='cars/')
     buyers = models.ManyToManyField(User, blank=True)
-        
+
+    @property
+    def in_stock(self):
+        return self.quantity > 0
+
     def __str__(self):
         return self.model
     
