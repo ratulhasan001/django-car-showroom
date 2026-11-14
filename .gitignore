@@ -12,3 +12,6 @@ venv/
 
 # macOS
 .DS_Store
+
+# Uploaded media (car images)
+mid-term/car_world/media/
