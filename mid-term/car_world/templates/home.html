@@ -1,51 +1,49 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
+{% block title %}{% if selected_brand %}{{ selected_brand.name }} cars{% else %}Home{% endif %}{% endblock %}
 {% block content %}
 
-{% for i in messages %}
-<div class="">
-  <h3 class="text-{{i.tags}} btn btn-primary disabled text-dark">{{i}}</h3>
-</div>
-{% endfor %}
-
-
-<div class="d-flex flex-wrap px-5 pt-3 align-items-center">
-
-  <div class="col-6">
-    <h1>Welcome to Car WOrld</h1>
-    <p>Welcome to Car WOrld, where your automotive dreams come to life! At [Car Shop Name], we pride ourselves on providing top-notch service and a wide selection of vehicles to suit every need and budget. Our team of experienced professionals is dedicated to helping you find the perfect car that matches your lifestyle and preferences. Whether you're in the market for a sleek sedan, a rugged SUV, or a high-performance sports car, we've got you covered. In addition to our extensive inventory of new and pre-owned vehicles, we also offer a range of automotive services, including maintenance, repairs, and customization. Our state-of-the-art facilities and skilled technicians ensure that your vehicle receives the care and attention it deserves.</p>
+<div class="row align-items-center mb-4">
+  <div class="col-md-6">
+    <h1>Welcome to Car World</h1>
+    <p>Welcome to Car World, where your automotive dreams come to life! We pride ourselves on providing top-notch service and a wide selection of vehicles to suit every need and budget. Our team of experienced professionals is dedicated to helping you find the perfect car that matches your lifestyle and preferences. Whether you're in the market for a sleek sedan, a rugged SUV, or a high-performance sports car, we've got you covered.</p>
   </div>
-  <div class="col-6">
-<img style="width: 90%;" src="{% static 'car1.jpg' %}"/>
+  <div class="col-md-6 text-center">
+    <img class="img-fluid rounded" style="max-height: 320px" src="{% static 'car1.jpg' %}" alt="A car on display at Car World" />
   </div>
 </div>
 
-<div class="col-2 bg-white p-3 d-flex" >
-  <h5 class="btn btn-primary disabled">All Categories</h5>
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+  <span class="fw-bold me-2">Brands:</span>
+  <a class="btn btn-sm {% if not selected_brand %}btn-danger{% else %}btn-outline-danger{% endif %}" href="{% url 'homepage' %}">All</a>
   {% for cat in brand %}
-  <div class="hudai">
-    <a class="btn btn-danger mx-2" href="{% url 'brand_wise_post' cat.slug %}" class="text-decoration-none text-dark" >{{cat.name}}</a>
-  </div>
+  <a class="btn btn-sm {% if selected_brand == cat %}btn-danger{% else %}btn-outline-danger{% endif %}" href="{% url 'brand_wise_post' cat.slug %}">{{ cat.name }}</a>
   {% endfor %}
 </div>
 
-<div class="col-10 p-3">
-
-  <h4>{{data | length}} results found</h4>
-  <div class="d-flex flex-wrap pt-5">
-    {% for post in data %}
-    <div class="col-sm-3">
-      <div class="card m-2">
-        <div class="card-body">
-          <img src="{{post.image.url}}" class="card-img-top" alt="...">
-          <h5 class="card-title">Model : {{post.model}}</h5>
-          <h5 class="card-title">Price : {{post.price}}$</h5>
-          <h5 class="card-title">Brand : {{post.brand}}</h5>
-          <a class="btn btn-dark" href="{% url 'car_details' post.id %}">View Details</a>
-        </div>
+<h4>{{ data|length }} result{{ data|length|pluralize }} found{% if selected_brand %} for {{ selected_brand.name }}{% endif %}</h4>
+<div class="row g-3 pt-2">
+  {% for post in data %}
+  <div class="col-sm-6 col-lg-3">
+    <div class="card h-100">
+      {% if post.image %}
+      <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.brand }} {{ post.model }}" />
+      {% endif %}
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ post.model }}</h5>
+        <p class="card-text mb-1">Brand: {{ post.brand }}</p>
+        <p class="card-text mb-3">Price: ${{ post.price }}</p>
+        {% if not post.in_stock %}<p><span class="badge text-bg-secondary">Out of stock</span></p>{% endif %}
+        <a class="btn btn-dark mt-auto" href="{% url 'car_details' post.id %}">View Details</a>
       </div>
     </div>
-    {% endfor %}
   </div>
-</div> 
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-light border text-center py-5">
+      {% if selected_brand %}No {{ selected_brand.name }} cars are listed right now. <a href="{% url 'homepage' %}">See all cars</a>.{% else %}No cars yet. Add brands and cars in the <a href="/admin/">admin</a>.{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}
