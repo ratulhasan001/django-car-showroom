@@ -3,9 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm,UserChangeForm
 
 class RegistrationForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={'id' : 'required'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={'id' : 'required'}))
-    email  = forms.EmailField(label='Email Address',widget=forms.EmailInput(attrs={'id' : 'required'}))
+    first_name = forms.CharField()
+    last_name = forms.CharField()
+    email = forms.EmailField(label='Email Address')
 
     class Meta:
         model = User
