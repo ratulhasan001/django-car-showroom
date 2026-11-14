@@ -1,3 +1,1 @@
-from django.test import TestCase
-
-# Create your tests here.
+# Brand tests live in car/tests.py.
